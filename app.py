@@ -11,33 +11,32 @@ def encrypt(reader, writer):
     for page in reader.pages:
         writer.add_page(page)
 
-    # Password
+    # Insert password from user
     print("Enter encryption password: ")
 
     password = input()
-    # if password != Null:
     writer.encrypt(password)
 
-    # reader.
-    print("Metadata")
-    title = reader.metadata.title
-
+    path = "encrypted files/" + reader.metadata.title + ".pdf"
     # create file
-    with open("encrypted files/${title}.pdf", "wb") as pdfFile:
+    with open(path, "wb") as pdfFile:
         writer.write(pdfFile)
 
-    print("File is encrypted successfully!")
+    print("Your file is encrypted successfully!")
+    print("Find the file at: ({})".format(path))
+
+    return path
 
 
-def decrypt():
+def decrypt(path):
     # Let's Remove The password from the PDFs
-    encryptedFilePath = "encrypted.pdf"
+    encryptedFilePath = path
 
     new_reader = PdfReader(encryptedFilePath)
 
     # open with password
     if new_reader.is_encrypted:
-        print("Enter encryption password: ")
+        print("Enter decryption password: ")
         password = input()
         new_reader.decrypt(password)
 
@@ -45,12 +44,13 @@ def decrypt():
     # open file and store pages in writer
     for page in new_reader.pages:
         new_writer.add_page(page)
-
-    print("Decrypted file is created")
-
+    decryptedFilePath = "decrypted files/" + reader.metadata.title + ".pdf"
     # make file
-    with open("decrypted files/decrypted.pdf", "wb") as pdfFile:
+    with open(decryptedFilePath, "wb") as pdfFile:
         new_writer.write(pdfFile)
+
+    print("Your file is decrypted successfully!")
+    print("Find the file at: ({})".format(decryptedFilePath))
 
 
 filePath = "example.pdf"
@@ -58,6 +58,6 @@ filePath = "example.pdf"
 reader = PdfReader(filePath)
 writer = PdfWriter()
 
-encrypt(reader, writer)
+encryptedFilePath = encrypt(reader, writer)
 
-decrypt()
+decrypt(encryptedFilePath)
